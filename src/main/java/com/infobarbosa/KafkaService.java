@@ -11,10 +11,12 @@ public class KafkaService{
 
    private static KafkaService kafkaService;
    private static Producer producer;
+   private static final String KAFKA_BOOTSTRAP_SERVERS = System.getenv("KAFKA_BOOTSTRAP_SERVERS");
+   private static final String KAFKA_TOPIC = System.getenv("TOPIC");
 
    private KafkaService(){
       Properties props = new Properties();
-      props.put("bootstrap.servers", "localhost:9092");
+      props.put("bootstrap.servers", KAFKA_BOOTSTRAP_SERVERS );
       props.put("acks", "all");
       props.put("retries", 0);
       props.put("batch.size", 16384);
@@ -36,7 +38,7 @@ public class KafkaService{
    }
 
    public void enqueue(String tweet){
-      producer.send(new ProducerRecord<String, String>("tweets", null, tweet));
+      producer.send(new ProducerRecord<String, String>(KAFKA_TOPIC, null, tweet));
    }
 
    public void close(){
