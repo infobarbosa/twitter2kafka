@@ -12,7 +12,7 @@ public class KafkaService{
    private static KafkaService kafkaService;
    private static Producer producer;
    private static final String KAFKA_BOOTSTRAP_SERVERS = System.getenv("KAFKA_BOOTSTRAP_SERVERS");
-   private static final String KAFKA_TOPIC = System.getenv("TOPIC");
+   private static final String KAFKA_TOPIC = System.getenv("KAFKA_TOPIC");
 
    private KafkaService(){
       Properties props = new Properties();
