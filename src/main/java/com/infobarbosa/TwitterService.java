@@ -1,5 +1,9 @@
 package com.infobarbosa;
 
+import com.google.gson.JsonObject;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+
 import com.twitter.hbc.ClientBuilder;
 import com.twitter.hbc.core.Constants;
 import com.twitter.hbc.core.endpoint.StatusesFilterEndpoint;
@@ -92,6 +96,8 @@ public class TwitterService {
     // Establish a connection
     client.connect();
 
+    Gson gson = new Gson();
+
     // Do whatever needs to be done with messages
     while( true ) {
       if (client.isDone()) {
@@ -103,8 +109,14 @@ public class TwitterService {
       if (msg == null) {
         System.out.println("Did not receive a message in 5 seconds");
       } else {
-        kafkaService.enqueue( msg );
-        System.out.println(msg);
+        JsonObject o = gson.fromJson(msg, JsonElement.class).getAsJsonObject();
+
+        String tweetId = o.get("id").getAsString();
+        System.out.println("Mensagem de id: " + tweetId);
+
+        kafkaService.enqueue( tweetId, msg );
+
+        System.out.println( msg );
       }
     }
 

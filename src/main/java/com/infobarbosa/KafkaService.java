@@ -45,8 +45,8 @@ public class KafkaService{
       return kafkaService;
    }
 
-   public void enqueue(String tweet){
-      producer.send(new ProducerRecord<String, String>(KAFKA_TOPIC, null, tweet));
+   public void enqueue(String tweetId, String tweet){
+      producer.send(new ProducerRecord<String, String>(KAFKA_TOPIC, tweetId, tweet));
    }
 
    public void close(){
