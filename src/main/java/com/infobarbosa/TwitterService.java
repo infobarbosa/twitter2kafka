@@ -100,23 +100,27 @@ public class TwitterService {
 
     // Do whatever needs to be done with messages
     while( true ) {
-      if (client.isDone()) {
-        System.out.println("Client connection closed unexpectedly: " + client.getExitEvent().getMessage());
-        break;
-      }
+      try{
+        if (client.isDone()) {
+          System.out.println("Client connection closed unexpectedly: " + client.getExitEvent().getMessage());
+          break;
+        }
 
-      String msg = queue.poll(5, TimeUnit.SECONDS);
-      if (msg == null) {
-        System.out.println("Did not receive a message in 5 seconds");
-      } else {
-        JsonObject o = gson.fromJson(msg, JsonElement.class).getAsJsonObject();
+        String msg = queue.poll(5, TimeUnit.SECONDS);
+        if (msg == null) {
+          System.out.println("Did not receive a message in 5 seconds");
+        } else {
+          JsonObject o = gson.fromJson(msg, JsonElement.class).getAsJsonObject();
 
-        String tweetId = o.get("id").getAsString();
-        System.out.println("Mensagem de id: " + tweetId);
+          String tweetId = o.get("id").getAsString();
+          System.out.println("Mensagem de id: " + tweetId);
 
-        kafkaService.enqueue( tweetId, msg );
+          kafkaService.enqueue( tweetId, msg );
 
-        System.out.println( msg );
+          System.out.println( msg );
+        }        
+      }catch(Exception e){
+        System.out.println( e );
       }
     }
 
